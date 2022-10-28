@@ -2,36 +2,48 @@ package io.github.ioni5;
 
 public class Menu {
 
-    private static final String[] TITLES = {
-        "\n1-De Baraja a Descarte.",
-        "\n2-De Descarte a Palo.",
-        "\n3-De Descarte a Columna.",
-        "\n4-De Palo a Columna.",
-        "\n5-De Columna a Palo.",
-        "\n6-De Columna a Columna.",
-        "\n7-De Descarte a Baraja.",
-        "\n8-Voltear en Columna.",
-        "\n9-Salir."
-    };
+    private Movement[] movements;
+
+    private int size;
+
+    private Exit exit;
+
+    public Menu() {
+        movements = new Movement[100];
+        exit = new Exit();
+    }
+
+    public void add(Movement movement) {
+        movements[size] = movement;
+        size++;
+    }
+
+    public void close() {
+        this.add(exit);
+    }
 
     public void show() {
         Console console = new Console();
         console.write("\nMenu");
-        for (String title : TITLES) {
-            console.write(title);
+        for (int i = 0; i < size; i++) {
+            movements[i].show(i + 1);
         }
     }
 
-    public int getOption() {
+    public Movement getOption() {
         Console console = new Console();
-        int option = 0;
+        int option = -1;
         boolean error = false;
         do {
-            option = console.readInt("\nIngrese opcion (1-" + TITLES.length + "): ");
-            error =  !new Intervale(1, TITLES.length).includes(option);
+            option = console.readInt("\nIngrese opcion (1-" + size + "): ");
+            error =  !new Intervale(1, size).includes(option);
 
         } while (error);
-        return option;
+        return movements[option - 1];
+    }
+
+    public boolean isExit() {
+        return exit.isExecuted();
     }
 
 }
